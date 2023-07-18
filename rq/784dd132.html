@@ -1,0 +1,549 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>浅学Android性能优化 | RayQuester</title><meta name="author" content="RQ527"><meta name="copyright" content="RQ527"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Android性能优化性能优化是一个app很重要的一部分，一个性能优良的app从被下载到启动到使用都能给用户到来很好的体验。自然我们做性能优化也是从被下载（安装包优化）、启动（启动优化）、使用（渲染优化、耗电优化、内存优化………）等入手。因为我也是个菜鸟，所有东西都是现学的，所以过程中有任何问题都可以提出来，大家一起长知识。 安装包优化当今手机的内存普遍是128G或者256G，当用户长时间使用，产">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅学Android性能优化">
+<meta property="og:url" content="http://rq527.github.io/rq/784dd132.html">
+<meta property="og:site_name" content="RayQuester">
+<meta property="og:description" content="Android性能优化性能优化是一个app很重要的一部分，一个性能优良的app从被下载到启动到使用都能给用户到来很好的体验。自然我们做性能优化也是从被下载（安装包优化）、启动（启动优化）、使用（渲染优化、耗电优化、内存优化………）等入手。因为我也是个菜鸟，所有东西都是现学的，所以过程中有任何问题都可以提出来，大家一起长知识。 安装包优化当今手机的内存普遍是128G或者256G，当用户长时间使用，产">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://rq527.github.io/img/header.jpg">
+<meta property="article:published_time" content="2022-07-10T15:13:22.000Z">
+<meta property="article:modified_time" content="2023-05-14T06:00:02.081Z">
+<meta property="article:author" content="RQ527">
+<meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://rq527.github.io/img/header.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://rq527.github.io/rq/784dd132.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '浅学Android性能优化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-05-14 14:00:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/header.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 菜单</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/top.png')"><nav id="nav"><span id="blog-info"><a href="/" title="RayQuester"><span class="site-name">RayQuester</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 菜单</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">浅学Android性能优化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-10T15:13:22.000Z" title="发表于 2022-07-10 23:13:22">2022-07-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-14T06:00:02.081Z" title="更新于 2023-05-14 14:00:02">2023-05-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Android/">Android</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">10.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>34分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="浅学Android性能优化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Android性能优化"><a href="#Android性能优化" class="headerlink" title="Android性能优化"></a>Android性能优化</h1><p>性能优化是一个app很重要的一部分，一个性能优良的app从被下载到启动到使用都能给用户到来很好的体验。自然我们做性能优化也是从被下载（安装包优化）、启动（启动优化）、使用（渲染优化、耗电优化、内存优化………）等入手。因为我也是个菜鸟，所有东西都是现学的，所以过程中有任何问题都可以提出来，大家一起长知识。</p>
+<h2 id="安装包优化"><a href="#安装包优化" class="headerlink" title="安装包优化"></a>安装包优化</h2><p>当今手机的内存普遍是128G或者256G，当用户长时间使用，产生了大量数据后，留给app安装的空间可能只有几十个G，甚至更少。所以一个app的大小可能就决定了用户是否选择你。</p>
+<h6 id="优化方案："><a href="#优化方案：" class="headerlink" title="优化方案："></a>优化方案：</h6><ol>
+<li><p>清理无用资源</p>
+<p>在app打包的时候一些废弃的代码和无用的资源可能也会被打包，这无疑会增加app的体积。好在Android Studio有这么一个检测无用资源和代码的功能。具体方法是【Refactor】-&gt;【Remove Unused Resources..】</p>
+<img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220707220022.png" style="zoom: 80%;" />
+
+<p>再点击【Preview】可查看和选择无用的资源和代码。</p>
+</li>
+<li><p>使用Lint工具检查代码</p>
+<p>Android-Lint是as集成的一个代码检查工具，它可以检测图片是否重复，优化xml布局等等。</p>
+<p>具体使用是Android Studio -&gt; 【Code】-&gt; 【Inspect Code】</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220708002040.png"></p>
+<p>Lint问题的种类：</p>
+<ul>
+<li>Correctness 不够完美的编码，比如硬编码、使用过时 API 等</li>
+<li>Performance 对性能有影响的编码，比如：静态引用，循环引用等</li>
+<li>Internationalization 国际化，直接使用汉字，没有使用资源引用等</li>
+<li>Security 不安全的编码，比如在 WebView 中允许使用 JavaScriptInterface 等</li>
+<li>Usability 可用的，有更好的替换的 比如排版、图标格式建议.png格式 等</li>
+<li>Accessibility 辅助选项，比如ImageView的contentDescription往往建议在属性中定义 等</li>
+</ul>
+<p>具体的一些问题种类的细分我这里就不多说了，可以看看这篇博客:</p>
+<p><a target="_blank" rel="noopener" href="https://www.freesion.com/article/250513772/">Android性能优化之 Android Lint - 灰信网（软件开发博客聚合） (freesion.com)</a></p>
+</li>
+<li><p>使用shrinkResources</p>
+<p>我们知道缩小APK大小的方法除了开启混淆外</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">minifyEnabled <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>还有</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">shrinkResources <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>这里说一下，minifyEnabled 是用来删除无用的代码，shrinkResources是用来删除无用的文件（但其实不是真正的删除，只是保留文   件名但是没有内容）。还有要注意，shrinkResources需要与minifyEnabled 来配合使用，只有当minifyEnabled 为true的时候			    shrinkResources才会起作用。但是有时候我们可能添加了一张图片只是作为验证，并未引用，这时候shrinkResources可能就会误删，怎么办呢？很简单，新增一个res&#x2F;raw&#x2F;keep.xml文件，并在文件如下编码</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resources</span> <span class="attr">xmlns:tools</span>=<span class="string">&quot;http://schemas.android.com/tools&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:keep</span>=<span class="string">&quot;@drawable/xxxx,@layout/xxxxx&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>keep里面就列举需要保留误删的资源。</p>
+<p>注：string.xml中没有被引用的怎么设置都不会被删除，shrinkResources删除的只是drawable和layout</p>
+</li>
+<li><p>资源压缩</p>
+<p>在Android中，使用的图片是比较多的，这些图片是很占用资源的，对图片进行压缩和择优选择也是app瘦身的一种方案。</p>
+<p>（1）使用tinypng等图片压缩工具对图片进行压缩，然后替换之前的图片</p>
+<p>（2）尽量将图片都用Webp格式的，其次是JPG格式，再是PNG格式</p>
+<p>（3）使用SVG，矢量图能比位图节约30%~40%的空间</p>
+<p>（4）尽量不要在项目中使用帧动画，一秒就十几张图片也是很耗内存的，使用Lottie等方案</p>
+<p>（5）重用Bitmap，不使用了记得回收</p>
+<p>（6）可以使用微信开源资源文件混淆工具——AndResGuard。一般可以压缩apk的1M左右大。</p>
+</li>
+<li><p>其他方法</p>
+<ul>
+<li><p>动态加载so库文件，插件化开发；</p>
+</li>
+<li><p>统一第三方库，在满足需求的前提下选择体积更小的库，仅引入需要的代码。比如图片加载库，按缓存的需要来我们可以对图片加载库做个排序：Picasso &lt; Android-Universal-Image-Loader &lt; Glide &lt; Fresco，Fresco体积比较大，一般用于图片缓存量比较大的app，比如壁纸app，一般Glide可满足日常需求，Picasso体积最小，它与和Square的网络库一起能发挥最大作用，因为Picasso可以选择将网络请求的缓存部分交给了okhttp实现；</p>
+</li>
+<li><p>避免使用枚举，可能几十个枚举才相当于一张图片，但是积少成多嘛；</p>
+</li>
+<li><p>在多国语言需求不大的情况下可以删除其他国家的语言，只保留中文和英文。</p>
+</li>
+<li><p>再深入一点的还有字节码优化等等等</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="启动优化"><a href="#启动优化" class="headerlink" title="启动优化"></a>启动优化</h2><p>启动优化可以说是性能优化里很重要很重要的一个部分了，用户拿到你的app，第一印象自然是app启动的界面，app启动的流畅度和时间长短，可以说启动性能就是一个app的门面。（最讨厌app启动时候的广告了）</p>
+<p>大家可能都听说过2-5-8原则：</p>
+<ul>
+<li>当用户在0-2秒之间得到响应时，会觉得系统响应得很快</li>
+<li>当用户在2-5秒之间得到响应时，会感觉系统的响应速度还可以</li>
+<li>当用户在5-8秒之间得到响应时，会感觉系统响应得速度很慢，但是还能接受</li>
+<li>当用户在超过8秒还无法得到响应时，会感觉系统很垃圾，认为系统已经挂了</li>
+</ul>
+<p>所以不管你的app做的再怎么牛逼，用户点进你的app，反应速度让他很失望，用户也无继续使用的欲望。那么我们应该如何去规划整体的启动优化呢？具体方案如下：</p>
+<h5 id="冷启动、热启动和温启动"><a href="#冷启动、热启动和温启动" class="headerlink" title="冷启动、热启动和温启动"></a>冷启动、热启动和温启动</h5><p>什么是冷启动、热启动、温启动？</p>
+<ul>
+<li>冷启动：系统不存在App进程（如APP首次启动或APP被完全杀死）时启动App称为冷启动。</li>
+<li>热启动：按了Home键或其它情况app被切换到后台，再次启动App的过程。</li>
+<li>温启动：温启动包含了冷启动的一些操作，不过App进程依然存在，这代表着它比热启动有更多的开销。</li>
+</ul>
+<p>由此可见启动最慢的是冷启动，最快的是热启动。着重优化的地方也是冷启动。</p>
+<p>在冷启动下会进行如下的相关流程</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220708125305.png"></p>
+<p>与我们代码相关的只有创建Application之后到首帧绘制之前。</p>
+<ol>
+<li><h3 id="Application创建"><a href="#Application创建" class="headerlink" title="Application创建"></a>Application创建</h3><p>当Application启动时，空白的启动窗口将保留在屏幕上，直到系统首次完成绘制应用程序。此时，系统进程会交换应用程序的启动窗口，允许用户开始与应用程序进行交互。这就是为什么我们的程序启动时会先出现一段时间的黑屏(白屏)，但其实市面上很多app启动都是有一个logo的，再是页面。</p>
+<p>如何解决？</p>
+<p>在themes.xml定义一个主题</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">&quot;WelcomeTheme&quot;</span> <span class="attr">parent</span>=<span class="string">&quot;Theme.AppCompat.NoActionBar&quot;</span>&gt;</span><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">        <span class="comment">&lt;!--设置背景颜色或者图片--&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:windowBackground&quot;</span>&gt;</span>@drawable/xxxx<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="comment">&lt;!--设置没有ActionBar--&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:windowNoTitle&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="comment">&lt;!--设置顶部状态栏颜色--&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">&quot;android:statusBarColor&quot;</span> &gt;</span>@color/xxxx<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"> </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ图片20220708143206.jpg" alt="img" style="zoom:80%;" />
+
+
+
+<p>但是这样也改变了activity启动后的theme，所以还得在onCreate方法中将主题还原，即</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">    	setTheme(R.style.Theme_Universe); <span class="comment">//恢复原有的样式</span></span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然也可另外用一个activity来用作启动的activity，在里面也可以做一些延时的操作或者加入开屏广告什么的一些操作。</p>
+<p>我们很多时候并不是用系统默认的Application，更多的时候是自定义一个MyApplication，然后在里面做一些初始化的操作。但是如果需要初始化的东西太多了，比如友盟，Bugly，网络请求库，图片加载库，ARouter等，势必会拖慢app的启动速度。那怎么办呢？这些又都是必须要的。只能异步加载了，或者等应用内启动之后再初始化。这里给出一些比价简单的优化操作：</p>
+<ol>
+<li>可以在Application中封装两个方法一个onSyncLoad，一个onAsyncLoad。比如像友盟，Bugly这样的业务非必要的可以的异步加载。可以放在onAsyncLoad中初始化；对于图片，网络请求框架就放在onSyncLoad中初始化。可能有人会觉得onAsyncLoad中异步会额外开销一个Thread，但其实当一个app体量变大后，开销一个Thread带来的收益是远远大于原来同步初始化的</li>
+<li>我们知道ContentProvider作为Android四大组件之一，它的onCreate方法是在Application.attachBaseContext() 和 Application.onCreate()之间执行的（原理后面说），所以我们也可以间接使用它来初始化操作以减轻Application的负担，这也是很多第三方库的做法，比如LeakCanary、Picasso。但是这样也有弊端，要知道ContentProvider属于四大组件之一也是比较重量级的，据测试，一个空ContentProvider启动就耗时2ms，如果数量再增加，那么可能性能优化就得不偿失了。所以JetPack新成员App Startup就诞生了。具体App Startup的使用非常简单，这里就不多说了，给出郭霖的文章：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/rverE0OGRnncB5-K-_Wesg">https://mp.weixin.qq.com/s/rverE0OGRnncB5-K-_Wesg</a></li>
+<li>再比如地图，推送等，非第一时间需要的可以在主线程做延时启动。当程序已经启动起来之后，在进行初始化。</li>
+</ol>
+</li>
+<li><h6 id="Activity创建"><a href="#Activity创建" class="headerlink" title="Activity创建"></a>Activity创建</h6></li>
+</ol>
+<p>Activity里面的优化和Application差不多，但是Activity.onCreate方法的开销是最大的，对整个app启动的影响也最大，所以绝对不能再里面执行太耗时的操作。其次是对布局优化也可以缩短onCreate的时间，具体见渲染优化。</p>
+<p>这里再介绍几个用于检测app启动性能的工具：</p>
+<ul>
+<li><p>最简单的就是as自己的日志工具</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ%E5%9B%BE%E7%89%8720220708180528.jpg" alt="D"></p>
+<p>搜索词是Displayed，右边选No Files，然后就能看到各个Activity的启动时间了。</p>
+</li>
+<li><p>在Terminal中输入adb shell am start  -W 包名&#x2F;包名.首屏Activity  这一行命令就能看到页面的启动时间</p>
+<img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ图片20220708181942.png" alt="T" style="zoom:200%;" />
+
+<p>控制台输出了以下信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Starting: Intent &#123; act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.example.universe/.view.MainActivity &#125;</span><br><span class="line">Status: ok</span><br><span class="line">LaunchState: COLD</span><br><span class="line">Activity: com.example.universe/.view.MainActivity</span><br><span class="line">TotalTime: 3447</span><br><span class="line">WaitTime: 3450</span><br><span class="line">Complete</span><br></pre></td></tr></table></figure>
+
+<p>简单说一下</p>
+<ul>
+<li><p>LaunchState：代表启动方式</p>
+</li>
+<li><p>TotalTime：代表启动时间，包含创建进程+Application 初始化+Activity 初始化到界面显示。</p>
+</li>
+<li><p>WaitTime： 一般比TotalTime 大点，包含系统影响的耗时</p>
+</li>
+</ul>
+</li>
+<li><p>借助优化检测工具</p>
+<p><strong>TraceView</strong></p>
+<p>TraceView是以图形的形式展示执行时间、调用栈等信息，信息比较全面，包含所有线程。<br>使用TraceView检测生成生成的结果会放在Andrid&#x2F;data&#x2F;packagename&#x2F;files路径下。因为Traceview收集的信息比较全面，所以会导致运行开销严重，整体APP的运行会变慢，因此我们无法区分是不是Traceview影响了我们的启动时间。AS已经为我们内置了TraceVeiw，直接用</p>
+<p>具体使用是AS - &gt; 【ProFiler】-&gt; 右侧SESSIONS 旁边的+号 -&gt; 选择你的手机，在选择一个进程  就会出现这样的画面</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ%E5%9B%BE%E7%89%8720220708184448.png" alt="F"></p>
+<p>图中A是一些事件的响应，比如点击，屏幕翻转等等</p>
+<p>B是CPU的一些使用情况，这里会说</p>
+<p>C是内存的一些使用情况，等会讲内存优化的时候会说</p>
+<p>D是电量的一些情况，讲耗电优化会说</p>
+<p>E是时间轴</p>
+<p>这里我们点击B区，就会出现下列界面</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ%E5%9B%BE%E7%89%8720220708185117.png" alt="G"></p>
+<p>同样，A是一些事件的响应，B是CPU的执行情况，C是线程列表和线程占用CPU的情况，D是时间轴，E是记录这些情况成文件进行更加细致的分析，这里就不说明了，可以百度其用法。</p>
+<p>以此我们可以更加直观的看出CPU的使用情况，从而找出问题解决问题。</p>
+<p><strong>SysTrace</strong></p>
+<p>Systrace是结合Android内核数据，生成HTML报告，从报告中我们可以看到各个线程的执行时间以及方法耗时和CPU执行时间等。它比TraceView更轻量，但用法差不多，具体用法可参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f83d84dcd0b8">Android Systrace使用介绍 - 简书 (jianshu.com)</a></p>
+</li>
+</ul>
+<h2 id="内存优化"><a href="#内存优化" class="headerlink" title="内存优化"></a>内存优化</h2><p>在Android的虚拟机中，每fork一个进程，它的内存是给定的，因为移动设备的内存相对PC比较小，资源紧张，因此一个app在运行过程中一定要管理好自己的那部分内存，以提高稳定性。在内存使用中经常出现的问题也是内存抖动和内存泄漏了。</p>
+<h3 id="内存抖动"><a href="#内存抖动" class="headerlink" title="内存抖动"></a>内存抖动</h3><p>内存抖动是由于短时间内有大量对象进出JVM的新生区导致的，内存忽高忽低，有短时间内上升和下落的趋势，分析图成锯齿状。</p>
+<p>它伴随着频繁的GC（Garbage Collection垃圾回收），频繁GC会大量占用UI线程和CPU资源，会导致APP整体卡顿，甚至OOM。</p>
+<h5 id="先说为什么频繁GC会导致APP整体卡顿？"><a href="#先说为什么频繁GC会导致APP整体卡顿？" class="headerlink" title="先说为什么频繁GC会导致APP整体卡顿？"></a>先说为什么频繁GC会导致APP整体卡顿？</h5><p>在JVM的GC机制中，垃圾回收有单线程收集和多线程收集，但不管是哪种回收方式，在回收的时候所有用户线程都会被暂停（STW），具体原理涉及JVM的知识了，就不再深入了。所以频繁地GC，用户线程就会被频繁地暂停，自然app就会卡顿。</p>
+<h5 id="为什么频繁GC也有可能会OOM？"><a href="#为什么频繁GC也有可能会OOM？" class="headerlink" title="为什么频繁GC也有可能会OOM？"></a>为什么频繁GC也有可能会OOM？</h5><p>先看一张图</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/IMG_20220708_230442.jpg" alt="A"></p>
+<p>这里简单说一下JVM的空间担保机制，简单理解就是Java堆划分为新生代 （Young Generation）和老年代（Old Generation）两个区域，新生代空间比较少，只有1&#x2F;3，而老年代有2&#x2F;3，新生代中不断有对象被创建然后回收，只有少部分仍然存在的对象会进入老年代。而当频繁GC时，会导致新生代中有大量对象被创建，然后新生代空间就会不够用，这时候老年代就会划分一部分空间用来给新生代创建大量的对象。这就是JVM的空间担保机制。但是当老年代被划出一部分空间后，假如这时候有一个比较大的对象，比如一张图片，从新生区转移到了老年区，但是这时候老年区被缩小了，剩下的空间不够了，这时候就触发了OOM。</p>
+<h5 id="怎么监测内存抖动？"><a href="#怎么监测内存抖动？" class="headerlink" title="怎么监测内存抖动？"></a>怎么监测内存抖动？</h5><p>AS有自带的检测内存抖动的工具—–Memory Monitor</p>
+<p>其实这个在启动优化工具里面也提到过。</p>
+<p>打开方式：Profiler -&gt;SESSIONS右边的加号选择你的手机在选择你的app   就会出现这样的界面</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ%E5%9B%BE%E7%89%8720220708184448.png" alt="F"></p>
+<p>这次我们不点B，选择C区Memory，这时候就会出现如下界面</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ%E5%9B%BE%E7%89%8720220709010830.jpg" alt="B"></p>
+<p>A依然是一些事件的反应，B是内存使用的图形化显示，C是鼠标放在图形上就会有各个语言占用内存情况，D是时间轴，但这是内存使用正常的情况，当出现频繁GC的情况时</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220709013129.png"></p>
+<p>是这样滴，底部还会有一排垃圾桶表示频繁回收。那么如何定位呢？我们看到左侧有三个选项：</p>
+<ul>
+<li>Capture heap dump：捕获堆转储，什么是堆转储？就是java的内存快照，简单来说就是把这些内存记录写入一个文件，文件类型是hprof，然后进行更细致的分析。更多的时候是结合MAT（Memory Analyzer tool）来分析内存泄漏，这也是比较老的方法，大家可查阅了解一下，但是这种方法比较低效（搞不好as会卡死），现在检测内存泄漏有更方便的工具—LeakCanary</li>
+<li>Record native allocations：记录native相关对象的内存分配</li>
+<li>Record java&#x2F;kotlin allocations：记录java&#x2F;kotlin相关对象的内存分配</li>
+</ul>
+<p>这里一般发生内存抖动都是由于频繁创建java&#x2F;kotlin对象引起的，所以我们选择第三个并点击Record，等待一会就会出现这样的界面</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220709015258.png" alt="A"></p>
+<p>上面一排排的垃圾桶就表示在频繁GC，下面的表格显示了各个对象内存分配情况，我们点击最多的char数组</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ%E5%9B%BE%E7%89%8720220709020245.jpg" alt="A"></p>
+<p>跟踪可以发现是stringPlus相关操作引起的GC频繁，再看String</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ%E5%9B%BE%E7%89%8720220709020233.jpg" alt="A"></p>
+<p>这里就追踪到了，原来是MainActivity里面的manyGCTest方法的问题。再看源码</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MainActivity</span> : <span class="type">AppCompatActivity</span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        findViewById&lt;Button&gt;(R.id.button).setOnClickListener &#123;</span><br><span class="line">            Thread&#123;</span><br><span class="line">                <span class="keyword">while</span> (<span class="literal">true</span>) manyGCTest()</span><br><span class="line">            &#125;.start()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">manyGCTest</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">var</span> str = <span class="string">&quot;&quot;</span></span><br><span class="line">        repeat(<span class="number">10000</span>)&#123;</span><br><span class="line">            str += it</span><br><span class="line">        &#125;</span><br><span class="line">        Thread.sleep(<span class="number">100</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>给一个按钮设置监听，按下开启线程，在一个死循环里面进行10000次字符串拼接操作，实际上每次str+&#x3D;it都会创建一个对象然后进行字符串拼接，但如果我们换成这样，情况会有所好转</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MainActivity</span> : <span class="type">AppCompatActivity</span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        findViewById&lt;Button&gt;(R.id.button).setOnClickListener &#123;</span><br><span class="line">            Thread&#123;</span><br><span class="line">                <span class="keyword">while</span> (<span class="literal">true</span>) manyGCTest()</span><br><span class="line">            &#125;.start()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">manyGCTest</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">/*var str = &quot;&quot;</span></span><br><span class="line"><span class="comment">        repeat(10000)&#123;</span></span><br><span class="line"><span class="comment">            str += it</span></span><br><span class="line"><span class="comment">        &#125;*/</span></span><br><span class="line">        <span class="keyword">val</span> sb = StringBuilder()</span><br><span class="line">        repeat(<span class="number">10000</span>)&#123;</span><br><span class="line">            sb.append(it)</span><br><span class="line">        &#125;</span><br><span class="line">        Thread.sleep(<span class="number">100</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>内存抖动减轻</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220709021347.png"></p>
+<p>这是因为StringBuilder做字符串拼接只会创建一次对象，所以我们在大量字符串拼接中能使用StringBuilder尽量使用StringBuilder。其实这样的情况也是比较常见的，比如在onDraw里面涉及了很多用Color.parseColor()来解析颜色，但是parseColor里面也涉及了很多字符串的操作，如果一个自定义View比较复杂这种操作很多的话这也会影响app的性能，再或者存储Cookie等等。具体的一些字符串拼接方式的区别这里也不多说了，给出一篇博客：[七种java字符串拼接详解 - &#96;&#96;&#96;…简单点 - 博客园 (cnblogs.com)](<a target="_blank" rel="noopener" href="https://www.cnblogs.com/yysbolg/p/13532971.html">https://www.cnblogs.com/yysbolg/p/13532971.html</a>)</p>
+<h3 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h3><h5 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h5><p>内存泄漏可以说是面试必问的，也是我们开发者所必须熟知的。那么什么是内存泄漏呢？就是程序中已经动态分配的堆内存由于某种原因程序未释放或无法释放，造成系统内存的浪费。简单来说就是一个对象该被回收却没有被回收，造成了内存浪费。那我们怎么知道一个对象怎么才能被GC回收呢？看一张图</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/IMG_20220708_233143.jpg" alt="A"></p>
+<p>在JVM中判断一个对象是否应该被回收一般根据可达性分析，如果一个对象的根可达，那它就不应该被回收，反之应该被回收。那么什么是根呢？就是GC roots，GC roots 一般有静态变量，线程栈变量，常量池，JNI（指针）等。举个例子，在我们还没学架构之前一直用的MVC，即所有的网络相关的操作都在Activity中进行，然后用Handler进行线程切换。但是在Handler作为非静态内部类的时候是有可能发生内存泄漏的，因为非静态内部类Handler会持有外部Activity的引用，而message会持有Handler的引用（具体见Handler源码），message会被messageQueue引用，messageQueue又被Looper引用，Looper又被Threadlocal引用，而Threadlocal属于Thread的变量即线程栈变量（GC roots即变量的根）。如果此时message是个延迟消息，而恰好在这延迟的时间段里面Activity被销毁了但是因为它还在被message引用造成它有根，不能被及时回收而一直占用内存。比教好的方案是把Handle写成静态内部类，因为静态内部类是不会持有外部的引用的，或者在onDestroy里面移除所有message。</p>
+<p>这里说个题外话，java的内存泄漏和C&#x2F;C++有什么区别呢？</p>
+<p>在java中，一个进程其实就是一个JVM的实例，进程中的操作都是靠JVM托管的。假如我开启了两个java进程A和B，A用来打游戏，B用来学高数。假如这时候我不想学习了，就是B发生了内存泄漏，B进程就挂掉了，但这并不影响A进程的进行，你挂你的，我运行我的。但在C&#x2F;C++中就不一样了，C&#x2F;C++中没有JVM，发生内存泄漏了影响的是整个操作系统，这个时候只有重启操作系统才会使被浪费的空间得到重用。这也就是为什么电脑用久了不重启一次就会变卡，而手机不会。</p>
+<h5 id="怎么检测内存泄漏呢？"><a href="#怎么检测内存泄漏呢？" class="headerlink" title="怎么检测内存泄漏呢？"></a>怎么检测内存泄漏呢？</h5><p>上面提及了一种方案，就是使用AS自带的Android Profiler工具再结合MAT分析，但这个做法比较低效，难度也比较大，而且如果app比较庞大容易卡死AS，现今比较常用的工具是LeakCanary，它的使用比较高效，方法也比较简单。其实LeakCanary也是基于MAT进行检测Android应用程序的开源工具。</p>
+<p>具体使用：在你的App中加入如下依赖：</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">debugImplementation <span class="string">&#x27;com.squareup.leakcanary:leakcanary-android:x.x.x&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在启动App的时候就额外出现一个金丝雀的图标</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/qq_pic_merged_1657355581046.jpg"></p>
+<p>这是时候内存泄漏检测就开始了，在你操作App的时候，如果这时候发生了内存泄漏状态栏就会有通知，比如我的手机</p>
+<img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/Screenshot_20220709_163546.jpg" style="zoom:25%;" />
+
+<p>点击通知它就会开始下载文件然后开始分析，分析完之后又会给你一个通知，此时再点进去就能看到LeakCanary为我们生成的发生内存泄漏对象的引用树</p>
+<img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/Screenshot_20220709_163630.jpg" alt="A" style="zoom:25%;" />
+
+<p>可以很明显看到是SecondActivity被MyThread引用而发生内存泄漏，此时再看源码的确如此</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SecondActivity</span> : <span class="type">AppCompatActivity</span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_second)</span><br><span class="line">        MyThread().start()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">inner</span> <span class="keyword">class</span> <span class="title class_">MyThread</span>:<span class="type">Thread</span>()&#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">            sleep(<span class="number">6</span>*<span class="number">6</span>*<span class="number">1000</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我在进入SecondActivity的时候开启了一个线程并让这个线程睡眠36秒，这时候我再推出当前Activity它不内存泄漏才怪呢。</p>
+<h2 id="渲染优化"><a href="#渲染优化" class="headerlink" title="渲染优化"></a>渲染优化</h2><p>在上一章我们说activity在onCreate的时候会绘制布局，这也是性能优化很重要的一个点。</p>
+<p>通过学习view的绘制流程我们知道，对于屏幕刷新频率60hz的手机来说，如果在1000&#x2F;60&#x3D;16.67ms内没有把这一帧的任务执行完毕，就会发生丢帧的现象，丢帧是造成界面卡顿的直接原因，渲染操作通常依赖于两个核心组件：CPU与GPU。CPU负责包括Measure，Layout等计算操作，GPU负责Rasterization（栅格化）操作。</p>
+<p>所谓栅格化，就是将矢量图形转换为位图的过程，手机上显示是按照一个个像素来显示的，比如将一个Button、TextView等组件拆分成一个个像素显示到手机屏幕上。而UI渲染优化的目的就是减轻CPU、GPU的压力，除去不必要的操作，保证每帧16ms以内处理完所有的CPU与GPU的计算、绘制、渲染等等操作，使UI顺滑、流畅的显示出来。</p>
+<h4 id="过度绘制"><a href="#过度绘制" class="headerlink" title="过度绘制"></a>过度绘制</h4><p>UI渲染优化的第一步就是找到Overdraw（过度绘制），即描述的是屏幕上的某个像素在同一帧的时间内被绘制了多次。在重叠的UI布局中，如果不可见的UI也在做绘制的操作或者后一个控件将前一个控件遮挡，会导致某些像素区域被绘制了多次，从而增加了CPU、GPU的压力。</p>
+<p>那么如何找出布局中Overdraw的地方呢？很简单，就是打开手机里开发者选项，然后将调试GPU过度绘制的开关打开即可，然后就可以看到应用的布局是否被Overdraw，比如我打开了调试过度绘制的开关，然后看QQ是这样的<br><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/Screenshot_20220712_174301.jpg" style="zoom: 25%;" /><br>蓝色、淡绿、淡红、深红代表了4种不同程度的Overdraw情况，1x、2x、3x和4x分别表示同一像素上同一帧的时间内被绘制了多次，1x就表示一次(最理想情况)，4x表示4次(最差的情况)，而我们做性能优化时，考虑消除的就是3x和4x。</p>
+<p>其次是自定义view时的过度绘制，我们知道，自定义View的时候有时会重写onDraw方法，但是Android系统是无法检测onDraw里面具体会执行什么操作，从而系统无法为我们做一些优化。这样对编程人员要求就高了，如果View有大量重叠的地方就会造成CPU、GPU资源的浪费，此时我们可以使用canvas.clipRect()来帮助系统识别那些可见的区域。这个方法可以指定一块矩形区域，只有在这个区域内才会被绘制，其他的区域会被忽视，还有clipPath()也是可以减少过度绘制的，只不过可能效果甚微。</p>
+<h4 id="合理布局"><a href="#合理布局" class="headerlink" title="合理布局"></a>合理布局</h4><p>在Android种系统对View进行测量、布局和绘制时，都是通过对View树的遍历来进行操作的。如果一个View树的高度太高就会严重影响测量、布局和绘制的速度。Google设计嵌套View最多是10层否则会崩溃。现在版本种Google使用RelativeLayout替代LineraLayout作为默认根布局，目的就是降低LineraLayout嵌套产生布局树的高度，从而提高UI渲染的效率。一下是合理布局的一些建议</p>
+<ol>
+<li>布局重用，对于多次重用的布局使用<include>标签来达到重用的目的，对于根布局一样的，可使用<merge>标签取消冗余的viewgroup。比如我我们使用<include>标签的时候可能include里面的布局最外层是<LinearLayout>，而在外部的外层布局也是<LinearLayout>，这时候就可以用<merge>标签替换里面的<LinearLayout>，然后系统就会把include的布局放到外部的LinearLayout而忽视merge，从而减少一层嵌套。</li>
+<li>对于一些复杂的布局我们有时候是不需要一来就全部加载的，这时候就可以用<ViewStub>标签来实现延迟加载，那有人可能会问，我直接设置控件的visible和invisible不行吗，是可以。但是设置visibility属性布局依然会被加载，只是不显示罢了，而VeiwStub只有被设置成visible时才会被加载。</li>
+<li>减少布局层级当布局层级太多的时候可以考虑Constranlayout，这个布局性能很好，适配好还能减少布局间的嵌套，其次可以考虑RelaticeLayout。</li>
+<li>减少不必要的背景设置，减少复杂shape等。能用父布局的背景，子布局就没必要再设置背景。</li>
+</ol>
+<p>那么怎样更直观地看自己App的布局层级呢？AS已经为我们集成了这么一个工具，具体打开的地方（需启动一个app）：</p>
+<p>Tools -&gt; Layout Inspector</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220712180704.png"></p>
+<p>左边是你app的布局树，中间是布局预览，右边是布局属性。借此可以全局分析你的app布局，就没必要再去每一个xml布局去看了。</p>
+<h3 id="WebVeiw优化"><a href="#WebVeiw优化" class="headerlink" title="WebVeiw优化"></a>WebVeiw优化</h3><p>WebView也是UI的一个部分，虽然html界面布局我们改变不了，但是我们可以通过WebView的用法去提高webview的性能。</p>
+<h4 id="webview提前初始化"><a href="#webview提前初始化" class="headerlink" title="webview提前初始化"></a><strong>webview提前初始化</strong></h4><p>我们知道每个页面在打开时都会调用setContentView()方法 -&gt; inflate() -&gt; createViewFromTag()，也就是说都会调用view的构造函数，webview也不例外，但是不同的是webview的首次构造耗时比较长。我们可以测试一下</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MainActivity</span> : <span class="type">AppCompatActivity</span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        findViewById&lt;Button&gt;(R.id.button).setOnClickListener &#123;</span><br><span class="line">            test()</span><br><span class="line">            test()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">test</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> start = System.currentTimeMillis()</span><br><span class="line">        WebView(App.appContext)</span><br><span class="line">        <span class="keyword">val</span> stop = System.currentTimeMillis()</span><br><span class="line">        Log.d(<span class="string">&quot;RQ&quot;</span>, <span class="string">&quot;test: <span class="subst">$&#123;stop - start&#125;</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打印</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">2022-07-12 20:15:07.432 29656-29656/com.example.improvetest D/RQ: test: 167</span><br><span class="line">2022-07-12 20:15:07.435 29656-29656/com.example.improvetest D/RQ: test: 3</span><br></pre></td></tr></table></figure>
+
+<p>可以看到第二次初始化webview的时间远小于第一次，这是为什么捏？因为它要加载Webview内核，这是一个重量级的操作，内核是以apk的形式存在。而内核加载后在同一页面是共享的，因此后续的初始化时间就很少了。</p>
+<p>那知道了这个我们可以提前初始化一个webview，减少后续webview初始化的时间。</p>
+<h4 id="WebView硬件加速致使页面渲染闪烁"><a href="#WebView硬件加速致使页面渲染闪烁" class="headerlink" title="WebView硬件加速致使页面渲染闪烁"></a><strong>WebView硬件加速致使页面渲染闪烁</strong></h4><p>4.0以上的系统我们开启硬件加速后，WebView渲染页面更加快速，拖动也更加顺滑。但有个反作用就是，但有的时候可能会出现页面闪烁的情况，解决这个问题的方法是在闪烁前将WebView的硬件加速临时关闭，之后再开启，代码以下：</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.HONEYCOMB) &#123;</span><br><span class="line">	<span class="comment">//关闭硬件加速</span></span><br><span class="line">	<span class="comment">//webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null)</span></span><br><span class="line">	<span class="comment">//开启硬件加速</span></span><br><span class="line">    <span class="comment">//webview.setLayerType(View.LAYER_TYPE_HARDWARE, null)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="增加进度条"><a href="#增加进度条" class="headerlink" title="增加进度条"></a><strong>增加进度条</strong></h4><p>在网络不是很好的情况下，加载页面会出现白屏的情况，虽然我们不能改变，但是我们可以增加一个进度条来让用户知道加载进度，这也算是提升了性能了吧。具体代码如下:</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">webView.webChromeClient = <span class="keyword">object</span> :WebChromeClient()&#123;</span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onProgressChanged</span><span class="params">(view: <span class="type">WebView</span>?, newProgress: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">                <span class="keyword">if</span>(newProgress==<span class="number">100</span>)&#123;</span><br><span class="line">                    pg1.setVisibility(View.GONE);<span class="comment">//加载完网页进度条消失</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    pg1.setVisibility(View.VISIBLE);<span class="comment">//开始加载网页时显示进度条</span></span><br><span class="line">                    pg1.setProgress(newProgress);<span class="comment">//设置进度值</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>如果webveiw在你的应用中占比很高，很重要，还可以将webview做成一个独立进程（如果有能力），然后用aidl，messager，content provider，广播等来跨进程通信，这样webview就不会影响原app的性能。比如QQ，微信，微信的第一次重构就将webview做成了独立的进程。</p>
+<p>webview我用的也不是很多，把一些我们可能用得上一些问题的做法给大家分享了一些，如果还觉得不够细致，具体可看看<a target="_blank" rel="noopener" href="https://juejin.cn/post/6857701249295810568">Android WebView 优化梳理 - 掘金 (juejin.cn)</a></p>
+<h2 id="卡顿优化"><a href="#卡顿优化" class="headerlink" title="卡顿优化"></a>卡顿优化</h2><p>卡顿优化其实前面也分析过了，UI绘制卡顿呐，启动慢导致的卡顿呐等等，具体见启动优化和渲染优化。这里说说卡顿到极致—-ANR之后如何解决。</p>
+<h4 id="ANR问题分析"><a href="#ANR问题分析" class="headerlink" title="ANR问题分析"></a>ANR问题分析</h4><p>ANR(Application Not responding)问题一般出现在Activtiy5秒之内无法响应屏幕触摸事件或者键盘输入事件，而BroadcastReceiver如果10秒之内还未执行完操作也会ANR。在实际开发中，ANR是很难从代码上发现的，那么我们应该怎么定位问题呢？其实，当一个进程发生ANR以后，系统会在&#x2F;data&#x2F;anr目录下创建记录ANR问题的文件，通过分析这些文件就能定位ANR的位置。</p>
+<p>这里我们模拟一下ANR，主界面就一个按钮，然后给按钮注册监听：</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MainActivity</span> : <span class="type">AppCompatActivity</span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        <span class="keyword">val</span> button = findViewById&lt;Button&gt;(R.id.button)</span><br><span class="line">        button.setOnClickListener &#123;</span><br><span class="line">            testANR()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">testANR</span><span class="params">()</span></span> &#123;</span><br><span class="line">        Thread.sleep(<span class="number">30</span>*<span class="number">1000</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后点击按钮两次你就会看到ANR或者直接崩溃。之后我们就假装不知道ANR的位置，开始分析问题。</p>
+<p>在老版本系统（<code>Android8.1</code>以下）的手机上，可以直接利用<code>adb pull /data/anr/traces.txt</code> 命令进行日志导出。</p>
+<p>在新系统中用这个命令是无法导出的，它会提示你权限不够。那么怎么办呢，我们可以通过<code>adb bugreport [导出目录]</code>进行导出，这个会导出一大堆东西（我们只挑选有用的）。比如在控制台执行<code>adb bugreport E:\test</code> ，他会从手机中导出一个<code>zip</code>包到电脑的<code>E:\test</code>目录，会有导出进度显示：</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ%E5%9B%BE%E7%89%8720220708215247.png" alt="D"></p>
+<p>导出完成：</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220708215035.png" alt="D"></p>
+<p>随后找到导出的文件，解压缩，在<code>/FS/data/anr</code>目录下可以找到程序中的ANR日志。</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220708215416.png" alt="A"></p>
+<p>打开日志文件大致浏览一下：</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220708220207.png"></p>
+<p>可以很明显看到是MainActivtiy里面的onCreate里面的按钮的点击事件的testANR方法里面的Thread.sleep造成的ANR，于是我们就可以痛快地解决问题啦。</p>
+<p>当然，实际问题可能比这个更复杂，这里只是告诉大家这么一个方法，到时候就具体问题具体分析。 这里列出一些常见的ANR原因</p>
+<ul>
+<li>主线程阻塞或主线程数据读取</li>
+</ul>
+<blockquote>
+<p>解决办法：避免死锁的出现，使用子线程来处理耗时操作或阻塞任务。尽量避免在主线程query provider、<a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://weishu.me/2016/10/13/sharedpreference-advices/">不要滥用SharePreferenceS</a></p>
+</blockquote>
+<ul>
+<li>CPU满负荷，I&#x2F;O阻塞</li>
+</ul>
+<blockquote>
+<p>解决办法：文件读写或数据库操作放在子线程异步操作。</p>
+</blockquote>
+<ul>
+<li>内存不足</li>
+</ul>
+<blockquote>
+<p>解决办法：<code>AndroidManifest.xml</code>文件<applicatiion>中可以设置 <code>android:largeHeap=&quot;true&quot;</code>，以此增大App使用内存。不过<strong>不建议使用此法</strong>，从根本上防止内存泄漏，优化内存使用才是正道。</p>
+</blockquote>
+<ul>
+<li>各大组件ANR</li>
+</ul>
+<blockquote>
+<p>各大组件生命周期中也应避免耗时操作，注意BroadcastReciever的onRecieve()、后台Service和ContentProvider也不要执行太长时间的任务。</p>
+</blockquote>
+<h2 id="网络优化"><a href="#网络优化" class="headerlink" title="网络优化"></a>网络优化</h2><p>App的网络连接对于用户来说, 影响很多, 且多数情况下都很直观, 直接影响用户对这个App的使用体验. 其中较为重要的两点：</p>
+<ul>
+<li><strong>流量</strong> ：App的流量消耗对用户来说是比较敏感的，毕竟流量是花钱的嘛.。现在大部分人的手机上都有安装流量监控的工具App，用来监控App的流量使用。如果我们的App这方面没有控制好，会给用户不好的使用体验。</li>
+<li><strong>用户等待</strong> ：也就是用户体验，良好的用户体验，才是我们留住用户的第一步。如果App请求等待时间长，会给用户网络卡，应用反应慢的感觉，如果有对比，有替代品，我们的App很可能就会被用户无情抛弃。</li>
+</ul>
+<h4 id="如何监测app的网络情况"><a href="#如何监测app的网络情况" class="headerlink" title="如何监测app的网络情况"></a>如何监测app的网络情况</h4><p>监测app网络的工具有很多，比如AS自带的，Fiddler代理工具等等。代理工具就不说了，有很多。这里介绍AS自带的工具如何使用。</p>
+<p>启动地方 AS -&gt; App Inspection</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/AAA.png" alt="A"></p>
+<p>然后就是这样的</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220712233902.png"></p>
+<p>中间的是网络监听状况，左边的是数据库监听状况，最右边的是后台服务的监听状况，看英文应该也好理解。数据库监听是这样的</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ%E5%9B%BE%E7%89%8720220712234246.jpg" alt="A"></p>
+<p>什么表名啊，列都有，存的内容也有。网络监听是这样的</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/QQ%E5%9B%BE%E7%89%8720220712234418.jpg" alt="A"></p>
+<p>蓝色的是下载文件的速度，橙色的是上传文件的速度。后台服务的就不展示了，大家可以试试看。</p>
+<h4 id="优化方案"><a href="#优化方案" class="headerlink" title="优化方案"></a>优化方案</h4><h5 id="合理使用网络缓存"><a href="#合理使用网络缓存" class="headerlink" title="合理使用网络缓存"></a>合理使用网络缓存</h5><p>适当的使用缓存，不仅可以让我们的应用看起来更快，也能避免一些不必要的流量消耗，带来更好的用户体验，我们可以对设备的使用状态进行监听，在wifi下可以缓存一部分图片。比方说Splash闪屏广告图片，我们可以在连接到Wifi时下载缓存到本地；新闻类的App可以在Wifi状态下做离线缓存</p>
+<h5 id="限制访问次数"><a href="#限制访问次数" class="headerlink" title="限制访问次数"></a>限制访问次数</h5><p>我们在开发app过程中有的时候会设置一个按钮，然后点击按钮发送请求，这样其实不是最优做法，如果我点击很多次按钮，就会在短时间内发送多次请求，那么就会浪费流量，也很消耗app的性能。所以我们需要限制访问次数，两种方案</p>
+<ol>
+<li>限制按钮的点击次数</li>
+<li>封装网络请求框架，在框架里限制同一时间访问的次数</li>
+</ol>
+<h5 id="不同状态展现不同页面"><a href="#不同状态展现不同页面" class="headerlink" title="不同状态展现不同页面"></a>不同状态展现不同页面</h5><p>加载时显示好康的动画，留住用户，加载失败也要展现好康的动画给用户看（别直接崩溃了）。</p>
+<p>其实说了这么多，一个好的网络请求框架就可以解决这些网络优化的问题，把这些解决方案封装在自己的网络请求框架里是最好的选择。</p>
+<h2 id="耗电优化"><a href="#耗电优化" class="headerlink" title="耗电优化"></a>耗电优化</h2><p>现今，我们可能对流量都不是很缺，而且基本每家都有wifi，相较与流量我觉得一个app的耗电对用户更加敏感，现在市面上的手机基本上都有监控每个app的耗电功能，比如我的</p>
+<img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/Screenshot_20220713_140120.jpg" style="zoom:25%;" />
+
+<p>可以看到QQ后台耗电多，抖音前台耗电多，但是这是QQ，没办法都得用，如果我们自己的app可能就被卸载了。那么我们先来分析一下为什么会耗电，盗用网上一张图就是</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d23d65e12d34ad396b8826de6bf2d35~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp" alt="img"></p>
+<p>事实上就是软件调用硬件而产生了耗电，那有哪些硬件是可以控制的捏？</p>
+<img src="https://img-blog.csdnimg.cn/img_convert/451499b3b9f8131b8396c7870d76670a.png" alt="img" style="zoom: 50%;" />
+
+<p>有这么这么多，我们就看几个常用的，CPU、GPU、Video、Audio、GPS、Network</p>
+<h5 id="Video、Audio"><a href="#Video、Audio" class="headerlink" title="Video、Audio"></a>Video、Audio</h5><p>在使用这些功能的使用时候，他牵涉的不单单一个元器件的问题，而是更多，所以我们在使用这些功能的时候要做到离开即刻关闭释放。这两个组件用的最多的可能就是短视频和直播app了，如果出现这部分耗电严重，可以看看这些解决方案：</p>
+<ol>
+<li>线程数是否暴增。</li>
+<li>弹幕是否做到复用了，是否存在内存泄露问题。</li>
+<li>动画特效是否及时释放，执行效率是否很快。</li>
+<li>承载功能的实例是否存在多份。</li>
+<li>检查内存、cpu使用情况。</li>
+</ol>
+<h5 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h5><p>无线网络包括移动网络和wifi两种情况。移动网络是比wifi更加耗电的。</p>
+<p><strong>移动网络</strong></p>
+<p>移动网络数据传输有3种状态：</p>
+<p>高功率状态：网络激活，允许设备以最大传输速率进行传输。</p>
+<p>低功率状态：传输速率低于15kbps，耗电是高功率状态的一半，一般不能直接从程序中进入该状态，而是由高功率状态降级进入。</p>
+<p>空闲状态：没有数据连接需要传输，耗电最少。可以看出，三种状态耗电不同，要使耗电最低应该尽量保持状态在空闲或低功率下。从空闲状态转换到高功率状态大概需要2s，从低功率状态转换到高功率状态需要1.5s。</p>
+<p>应用中每创建一个网络连接，网络射频都会转到高功率状态，数据传输完毕降回低功率状态，降回过程需要5s，这5s耗电量保持在高功率状态，低功率降回到空闲状态需要12s，期间一直保持低功率状态。所以每次的数据传输都将导致将近20s电量的消耗。</p>
+<p><strong>WIFI网络</strong></p>
+<p>WIFI在active状态下有4种模式：低功率、高功率、低传输、高传输。</p>
+<p>当从低(高)功率状态传输数据时，WIFI会暂时进入相应的低(高)传输状态，一旦数据传输完毕就回到初始状态。WIFI耗电是受包率(每秒接收和发送的数据包)和网速因素影响的。如果因素良好，即网络良好时，数据传输的很快，所以WIFI的高功率状态维持时间很短。这也就是为什么说移动网络耗电高于WIFI耗电，因为同样的数据大小传输时，移动网络固定状态转换就需要近20s的电量消耗。通过上面了解了网络连接过程，应该心里有了大概的优化建议。</p>
+<p><strong>网络耗电优化方案：</strong></p>
+<ol>
+<li>文本和文件压缩传输。 不管发送还是请求数据，在数据传输过程中使用gzip（Gzip是传输时将文件压缩传输的一种技术，okhttp默认是使用了gzip的）将数据进行压缩。经过压缩的数据需要更短的时间传输即可完成，这样使得无线所处的高功率状态时间更短，从而减少了耗电。</li>
+<li>精简文本文件，去掉文本中空行、空格、注释等无意义内容。</li>
+<li>请求一个图片时，客户端提供一个分辨率大小，服务器根据分辨率把裁剪缩放后的图片给客户端返回，采用使用webp图片。（节省传输时间）</li>
+</ol>
+<h5 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a><strong>CPU</strong></h5><p>cpu作为计算机系统的运算和控制核心，是信息处理、程序运行的最终执行单元。线程是操作系统能够进行运算调度的最小单位。它被包含在进程之中，是进程中的实际运作单位。通过上面的两个概念我们大概知道，一个我们负责设备运算和控制的元器件，一个是程序运算调度的最小单位。</p>
+<p>CPU被高频次使用大概有以下几个原因：</p>
+<ol>
+<li><p>程序运算复杂(高运算量)，例如高精度等，导致CPU满负荷运载，这里优化可能就设计数据结构、算法啥的。</p>
+</li>
+<li><p>程序线程短时间内无规则抢占CPU资源。</p>
+</li>
+<li><p>wakelock唤醒。wakelock是什么？</p>
+<blockquote>
+<p>为了延长电池的使用寿命，Android设备会在一段时间后使屏幕变暗，然后关闭屏幕显示，最后停止CPU。WakeLock是一个电源管理系统服务功能，应用程序可以使用它来控制设备的电源状态。</p>
+<p>WakeLock可以用来保持CPU运行，避免屏幕变暗和关闭，以及避免键盘背光灯熄灭。</p>
+</blockquote>
+</li>
+<li><p>定时器（AlarmManager）。</p>
+</li>
+</ol>
+<h5 id="其他-1"><a href="#其他-1" class="headerlink" title="其他"></a><strong>其他</strong></h5><p>我们用的多是GPS定位、Sensor遥感，只有当我们需要的时候才去打开这些硬件资源，并且及时释放，就能做到电量使用最优了。</p>
+<p>接下来介绍一下AS对手机电量监控的工具，具体打开方式：AS -&gt; Profiler -&gt; Energy</p>
+<p><img src="https://rq527-1310352304.cos.ap-chongqing.myqcloud.com/20220713002246.png"></p>
+<p>其实跟之前看CPU和内存差不多，鼠标放上去能看到CPU、Network、Location的耗电程度，大致分为None、Light（轻）、Medium（中）、Heavy（严重）</p>
+<p>当然，还有个更好的检测软件，叫Battery Historian，这里就不演示了，可自行上网查询。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过对性能优化的学习，我发现他涉及的知识是方方面面的，像AMS、PMS、WMS、hook、启动流程等等等等，所以我觉得要真正做到性能优化，对这些一定要很了解的，不然完全不知道从哪下手。同时，这篇文章肯定还存在不足，可能也有错误，如果大家发现了都可以提出来。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://rq527.github.io">RQ527</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://rq527.github.io/rq/784dd132.html">http://rq527.github.io/rq/784dd132.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://rq527.github.io" target="_blank">RayQuester</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a><a class="post-meta__tags" href="/tags/Android/">Android</a></div><div class="post_share"><div class="social-share" data-image="/img/header.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/rq/e54d6d21.html" title="LeakCanary为什么这么神奇？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">LeakCanary为什么这么神奇？</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/rq/9df138cf.html" title="Jetpack之一：Lifecycle"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-20</div><div class="title">Jetpack之一：Lifecycle</div></div></a></div><div><a href="/rq/e6b8b5a8.html" title="Jetpack之三：LiveData"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-27</div><div class="title">Jetpack之三：LiveData</div></div></a></div><div><a href="/rq/a365d41.html" title="Jetpack之二：Databinding和Navigation的使用"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-23</div><div class="title">Jetpack之二：Databinding和Navigation的使用</div></div></a></div><div><a href="/rq/260b5af1.html" title="Jetpack之四：ViewModel"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-04</div><div class="title">Jetpack之四：ViewModel</div></div></a></div><div><a href="/rq/e54d6d21.html" title="LeakCanary为什么这么神奇？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-15</div><div class="title">LeakCanary为什么这么神奇？</div></div></a></div><div><a href="/rq/22f4c025.html" title="一名（深陷Android无法自拔的）大二狗的年中总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-18</div><div class="title">一名（深陷Android无法自拔的）大二狗的年中总结</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="lv-container" data-id="city" data-uid="MTAyMC81ODQ1Mi8zNDkxNQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/header.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">RQ527</div><div class="author-info__description">=与其诅咒黑暗，不如点亮蜡烛=</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/RQ527"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/RQ527" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://juejin.cn/user/3228640351367704" target="_blank" title="稀土掘金"><i class="fas fa-book-open"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎您的到来，希望我的文章能对您有所帮助，若有疑问和文章建议欢迎评论~</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">Android性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%8C%85%E4%BC%98%E5%8C%96"><span class="toc-number">1.1.</span> <span class="toc-text">安装包优化</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88%EF%BC%9A"><span class="toc-number">1.1.0.0.0.1.</span> <span class="toc-text">优化方案：</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text">启动优化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%B7%E5%90%AF%E5%8A%A8%E3%80%81%E7%83%AD%E5%90%AF%E5%8A%A8%E5%92%8C%E6%B8%A9%E5%90%AF%E5%8A%A8"><span class="toc-number">1.2.0.0.1.</span> <span class="toc-text">冷启动、热启动和温启动</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Application%E5%88%9B%E5%BB%BA"><span class="toc-number">1.2.1.</span> <span class="toc-text">Application创建</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#Activity%E5%88%9B%E5%BB%BA"><span class="toc-number">1.2.1.0.0.1.</span> <span class="toc-text">Activity创建</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96"><span class="toc-number">1.3.</span> <span class="toc-text">内存优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%8A%96%E5%8A%A8"><span class="toc-number">1.3.1.</span> <span class="toc-text">内存抖动</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%88%E8%AF%B4%E4%B8%BA%E4%BB%80%E4%B9%88%E9%A2%91%E7%B9%81GC%E4%BC%9A%E5%AF%BC%E8%87%B4APP%E6%95%B4%E4%BD%93%E5%8D%A1%E9%A1%BF%EF%BC%9F"><span class="toc-number">1.3.1.0.1.</span> <span class="toc-text">先说为什么频繁GC会导致APP整体卡顿？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%A2%91%E7%B9%81GC%E4%B9%9F%E6%9C%89%E5%8F%AF%E8%83%BD%E4%BC%9AOOM%EF%BC%9F"><span class="toc-number">1.3.1.0.2.</span> <span class="toc-text">为什么频繁GC也有可能会OOM？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E7%9B%91%E6%B5%8B%E5%86%85%E5%AD%98%E6%8A%96%E5%8A%A8%EF%BC%9F"><span class="toc-number">1.3.1.0.3.</span> <span class="toc-text">怎么监测内存抖动？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">1.3.2.</span> <span class="toc-text">内存泄漏</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.2.0.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E6%A3%80%E6%B5%8B%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E5%91%A2%EF%BC%9F"><span class="toc-number">1.3.2.0.2.</span> <span class="toc-text">怎么检测内存泄漏呢？</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E4%BC%98%E5%8C%96"><span class="toc-number">1.4.</span> <span class="toc-text">渲染优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E5%BA%A6%E7%BB%98%E5%88%B6"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">过度绘制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%88%E7%90%86%E5%B8%83%E5%B1%80"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">合理布局</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WebVeiw%E4%BC%98%E5%8C%96"><span class="toc-number">1.4.1.</span> <span class="toc-text">WebVeiw优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#webview%E6%8F%90%E5%89%8D%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">webview提前初始化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WebView%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F%E8%87%B4%E4%BD%BF%E9%A1%B5%E9%9D%A2%E6%B8%B2%E6%9F%93%E9%97%AA%E7%83%81"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">WebView硬件加速致使页面渲染闪烁</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E8%BF%9B%E5%BA%A6%E6%9D%A1"><span class="toc-number">1.4.1.3.</span> <span class="toc-text">增加进度条</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">1.4.1.4.</span> <span class="toc-text">其他</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%A1%E9%A1%BF%E4%BC%98%E5%8C%96"><span class="toc-number">1.5.</span> <span class="toc-text">卡顿优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ANR%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">1.5.0.1.</span> <span class="toc-text">ANR问题分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96"><span class="toc-number">1.6.</span> <span class="toc-text">网络优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%B5%8Bapp%E7%9A%84%E7%BD%91%E7%BB%9C%E6%83%85%E5%86%B5"><span class="toc-number">1.6.0.1.</span> <span class="toc-text">如何监测app的网络情况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88"><span class="toc-number">1.6.0.2.</span> <span class="toc-text">优化方案</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%90%88%E7%90%86%E4%BD%BF%E7%94%A8%E7%BD%91%E7%BB%9C%E7%BC%93%E5%AD%98"><span class="toc-number">1.6.0.2.1.</span> <span class="toc-text">合理使用网络缓存</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E8%AE%BF%E9%97%AE%E6%AC%A1%E6%95%B0"><span class="toc-number">1.6.0.2.2.</span> <span class="toc-text">限制访问次数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E7%8A%B6%E6%80%81%E5%B1%95%E7%8E%B0%E4%B8%8D%E5%90%8C%E9%A1%B5%E9%9D%A2"><span class="toc-number">1.6.0.2.3.</span> <span class="toc-text">不同状态展现不同页面</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%80%97%E7%94%B5%E4%BC%98%E5%8C%96"><span class="toc-number">1.7.</span> <span class="toc-text">耗电优化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Video%E3%80%81Audio"><span class="toc-number">1.7.0.0.1.</span> <span class="toc-text">Video、Audio</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Network"><span class="toc-number">1.7.0.0.2.</span> <span class="toc-text">Network</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CPU"><span class="toc-number">1.7.0.0.3.</span> <span class="toc-text">CPU</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B6%E4%BB%96-1"><span class="toc-number">1.7.0.0.4.</span> <span class="toc-text">其他</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.8.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/rq/22f4c025.html" title="一名（深陷Android无法自拔的）大二狗的年中总结">一名（深陷Android无法自拔的）大二狗的年中总结</a><time datetime="2023-07-18T12:52:31.632Z" title="发表于 2023-07-18 20:52:31">2023-07-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/rq/cf6c3d31.html" title="设计模式学习笔记">设计模式学习笔记</a><time datetime="2023-05-29T08:10:26.110Z" title="发表于 2023-05-29 16:10:26">2023-05-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/rq/9f08fd9f.html" title="一文搞清楚Handler，再也不怕面试官">一文搞清楚Handler，再也不怕面试官</a><time datetime="2023-04-25T04:36:29.000Z" title="发表于 2023-04-25 12:36:29">2023-04-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/rq/260b5af1.html" title="Jetpack之四：ViewModel">Jetpack之四：ViewModel</a><time datetime="2023-04-04T10:35:59.000Z" title="发表于 2023-04-04 18:35:59">2023-04-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/rq/e6b8b5a8.html" title="Jetpack之三：LiveData">Jetpack之三：LiveData</a><time datetime="2023-03-27T07:56:39.000Z" title="发表于 2023-03-27 15:56:39">2023-03-27</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By RQ527</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadLivere () {
+  if (typeof LivereTower === 'object') {
+    window.LivereTower.init()
+  }
+  else {
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  }
+}
+
+if ('Livere' === 'Livere' || !false) {
+  if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+  else loadLivere()
+}
+else {
+  function loadOtherComment () {
+    loadLivere()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="I,LOVE,YOU" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
